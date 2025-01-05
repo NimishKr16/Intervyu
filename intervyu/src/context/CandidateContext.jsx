@@ -11,7 +11,6 @@ export const CandidateProvider = ({ children }) => {
   const [candidates, setCandidates] = useState(() => {
     // Get initial data from localStorage
     const savedCandidates = localStorage.getItem('candidates');
-    // console.log(savedCandidates); // for debugging
     return savedCandidates ? JSON.parse(savedCandidates) : [];
   });
 
@@ -22,11 +21,22 @@ export const CandidateProvider = ({ children }) => {
 
   // Add Candidate Function
   const addCandidate = (candidate) => {
-    setCandidates((prev) => [...prev, { ...candidate, date: 'Pending', time: 'Pending' }]);
+    const newCandidate = {
+      ...candidate,
+      id: Date.now(), // Assign a unique id based on current timestamp
+      date: 'Pending',
+      time: 'Pending',
+    };
+    setCandidates((prev) => [...prev, newCandidate]);
+  };
+
+  // Delete Candidate Function
+  const deleteCandidate = (id) => {
+    setCandidates((prev) => prev.filter((candidate) => candidate.id !== id));
   };
 
   return (
-    <CandidateContext.Provider value={{ candidates, addCandidate }}>
+    <CandidateContext.Provider value={{ candidates, addCandidate, deleteCandidate }}>
       {children}
     </CandidateContext.Provider>
   );

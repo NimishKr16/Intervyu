@@ -15,7 +15,7 @@ export function SideNav() {
       </Sidebar.Logo>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiInbox}
+          <Sidebar.Item onClick={() => navigate('/schedule')} icon={HiInbox}
           className='cursor-pointer'>
             Schedule
           </Sidebar.Item>

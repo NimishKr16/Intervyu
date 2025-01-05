@@ -1,67 +1,84 @@
 "use client";
 import React, { useState } from "react";
 import { useCandidates } from "../context/CandidateContext";
-import { Dropdown, Label, TextInput } from "flowbite-react";
+import { Dropdown, Label, TextInput, Button} from "flowbite-react";
+import { toast } from 'react-toastify'; // Import toast from react-toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for React-Toastify
 
 function AddCandidate() {
   const { addCandidate } = useCandidates();
   const [name, setName] = useState("");
-  const [interviewType, setInterviewType] = useState("Technical");
+  const [interviewType, setInterviewType] = useState("");
+  const [interviewer, setInterviewer] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name) return alert("Please enter a candidate name");
     // console.log(name, interviewType); // for debugging
-    addCandidate({ name, interviewType });
+    addCandidate({ name, interviewType, interviewer });  
     setName("");
     setInterviewType("Technical");
+    // Notification
+    toast.success('Candidate Added Successfully!', {
+        position: 'top-right', 
+        autoClose: 3000,
+      });
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Add Candidate</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="pb-2">
-          <div className="mb-2 block">
-            {/* <Label htmlFor="candidateName" value="Candidate Name" /> */}
+    <div className="flex items-center justify-center -mt-48 px-4">
+      <div>
+        <h1 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+            Add Candidate
+          </span>
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <div className="pb-2">
+            <TextInput
+              className="w-full"
+              id="candidateName"
+              type="text"
+              placeholder="Enter Candidate Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              sizing="md"
+            />
           </div>
-          <TextInput
-            className="w-[15%]"
-            id="candidateName"
-            type="text"
-            placeholder="Enter Candidate Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            sizing="md"
-          />
-        </div>
-        <Dropdown
-          label={interviewType || "Select Interview Type"}
-          className="mb-2 w-[10%]"
-        >
-          <Dropdown.Item onClick={() => setInterviewType("Technical")}>
-            Technical
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setInterviewType("System Design")}>
-            System Design
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setInterviewType("Managerial")}>
-            Managerial
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setInterviewType("Behavioral")}>
-            Behavioral
-          </Dropdown.Item>
-          <Dropdown.Item onClick={() => setInterviewType("HR")}>
-            HR
-          </Dropdown.Item>
-        </Dropdown>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 mt-2 rounded"
-        >
-          Add Candidate
-        </button>
-      </form>
+          <div className="mt-2">
+          <Dropdown
+            label={interviewType || "Select Interview Type"}
+            className="mb-2 w-[10%]"
+          >
+            <Dropdown.Item onClick={() => setInterviewType("Technical")}>
+              Technical
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setInterviewType("System Design")}>
+              System Design
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setInterviewType("Managerial")}>
+              Managerial
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setInterviewType("Behavioral")}>
+              Behavioral
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setInterviewType("HR")}>
+              HR
+            </Dropdown.Item>
+          </Dropdown>
+          </div>
+          <Button
+            outline
+            gradientDuoTone="greenToBlue"
+            type="submit"
+            className="mt-4 font-bold"
+          >
+            Add Candidate
+          </Button>
+        </form>
+         
+      </div>
     </div>
   );
 }
