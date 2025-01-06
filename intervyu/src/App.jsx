@@ -1,8 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-// SideNav
-import FinalSideNav from "./components/FinalSideNav.jsx";
+// Top Nav
+import { TopNav } from "./components/TopNav.jsx";
+
 // <-- Pages -->
 // Add Candidate
 import AddCandidate from "./pages/AddCandidate";
@@ -10,20 +11,22 @@ import AddCandidate from "./pages/AddCandidate";
 import CandidateDashboard from "./pages/CandidateDashboard";
 // Candidate List
 import { CandidateProvider } from "./context/CandidateContext";
+// Calendar
 import Calendar from "./components/Calendar.jsx";
 
 
 function App() {
+
   return (
     <>
     <BrowserRouter>
       <CandidateProvider>
       <ToastContainer />
-        <FinalSideNav/>
+        <TopNav/>
         <Routes>
           <Route path="/add-candidate" element={<AddCandidate />} />
           <Route path="/candidates" element={<CandidateDashboard />} />
-          <Route path="/schedule" element={<Calendar />} />
+          <Route path="/" element={<Calendar />} />
         </Routes>
       </CandidateProvider>
       </BrowserRouter>

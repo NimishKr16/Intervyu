@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { useCandidates } from "../context/CandidateContext";
 import { Dropdown, Label, TextInput, Button} from "flowbite-react";
-import { toast } from 'react-toastify'; // Import toast from react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for React-Toastify
+import { toast } from 'react-toastify'; 
+import 'react-toastify/dist/ReactToastify.css'; 
 
 function AddCandidate() {
   const { addCandidate } = useCandidates();
@@ -27,7 +27,7 @@ function AddCandidate() {
   };
 
   return (
-    <div className="flex items-center justify-center -mt-48 px-4">
+    <div className="flex items-center justify-center mt-48 px-4">
       <div>
         <h1 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
           <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">

@@ -19,12 +19,12 @@ const CandidateDashboard = () => {
   };
 
   const handleDelete = () => {
-    deleteCandidate(candidateToDelete.id); // Assuming the candidate has an 'id'
+    deleteCandidate(candidateToDelete.id); 
     closeDeleteModal();
   };
 
   return (
-    <div className="flex justify-center items-center -mt-56 ml-20">
+    <div className="flex justify-center items-center mt-48 px-4">
       <div className="w-full max-w-4xl">
         <h2 class="flex flex-row flex-nowrap items-center">
           <span class="flex-grow block border-t border-black"></span>

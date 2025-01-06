@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import FullCalendar from "@fullcalendar/react"; // Import FullCalendar component
-import dayGridPlugin from "@fullcalendar/daygrid"; // Import dayGrid plugin for month view
-import interactionPlugin from "@fullcalendar/interaction"; // Import interaction plugin for drag and drop
+import FullCalendar from "@fullcalendar/react"; 
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
 
 const Calendar = () => {
   const [events, setEvents] = useState([
@@ -25,7 +25,9 @@ const Calendar = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Interview Calendar</h2>
+      <h1 class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-teal-500 text-4xl font-black text-center py-8">
+      Upcoming Interviews
+      </h1>
       <FullCalendar
         plugins={[dayGridPlugin, interactionPlugin]}
         initialView="dayGridMonth" // Set the initial view to month view
