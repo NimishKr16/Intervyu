@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useCandidates } from "../context/CandidateContext";
-import { Modal, Button } from "flowbite-react";
-import { FaTrash, FaEdit } from "react-icons/fa"; // Import delete and edit icons
+import { Modal, Button, Table } from "flowbite-react";
+import { FaTrash, FaEdit } from "react-icons/fa";
 
 const CandidateDashboard = () => {
   const { candidates, deleteCandidate } = useCandidates();
@@ -19,50 +19,46 @@ const CandidateDashboard = () => {
   };
 
   const handleDelete = () => {
-    deleteCandidate(candidateToDelete.id); 
+    deleteCandidate(candidateToDelete.id);
     closeDeleteModal();
   };
 
   return (
-    <div className="flex justify-center items-center mt-48 px-4">
-      <div className="w-full max-w-4xl">
-        <h2 class="flex flex-row flex-nowrap items-center">
-          <span class="flex-grow block border-t border-black"></span>
-          <span class="flex-none block mx-4 px-4 mb-4 py-2.5 text-xl rounded leading-none font-medium bg-black text-white">
+    <div className="flex justify-center items-center mt-24 px-4 overflow-x-auto">
+      <div className="w-full max-w-5xl overflow-x-auto">
+        <h2 className="flex flex-row flex-nowrap items-center mb-4">
+          <span className="flex-grow block border-t border-black"></span>
+          <span className="flex-none block mx-4 px-4 py-2.5 text-xl rounded leading-none font-medium bg-black text-white">
             List of Candidates
           </span>
-          <span class="flex-grow block border-t border-black"></span>
+          <span className="flex-grow block border-t border-black"></span>
         </h2>
-        <table className="w-full border-collapse border">
-          <thead>
-            <tr>
-              <th className="border p-2">Name</th>
-              <th className="border p-2">Type of Interview</th>
-              <th className="border p-2">Date/Time</th>
-              <th className="border p-2">Interviewer</th>
-              <th className="border p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+
+        {/* Flowbite Table */}
+        <Table hoverable>
+          <Table.Head>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Type of Interview</Table.HeadCell>
+            <Table.HeadCell>Date/Time</Table.HeadCell>
+            <Table.HeadCell>Interviewer</Table.HeadCell>
+            <Table.HeadCell>Actions</Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
             {candidates.map((candidate) => (
-              <tr key={candidate.id}>
-                <td className="border p-2">{candidate.name}</td>
-                <td className="border p-2">{candidate.interviewType}</td>
-                <td
-                  className={`border p-2 ${
-                    candidate.dateTime ? "" : "text-red-500 font-semibold"
-                  }`}
+              <Table.Row key={candidate.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell>{candidate.name}</Table.Cell>
+                <Table.Cell>{candidate.interviewType}</Table.Cell>
+                <Table.Cell
+                  className={candidate.dateTime ? "" : "text-red-500 font-semibold"}
                 >
                   {candidate.dateTime || "Not Assigned"}
-                </td>
-                <td
-                  className={`border p-2 ${
-                    candidate.interviewer ? "" : "text-red-500 font-semibold"
-                  }`}
+                </Table.Cell>
+                <Table.Cell
+                  className={candidate.interviewer ? "" : "text-red-500 font-semibold"}
                 >
                   {candidate.interviewer || "Not Assigned"}
-                </td>
-                <td className="border p-2">
+                </Table.Cell>
+                <Table.Cell>
                   <button
                     onClick={() => openDeleteModal(candidate)}
                     className="text-red-500 mr-2"
@@ -72,11 +68,11 @@ const CandidateDashboard = () => {
                   <button className="text-blue-500">
                     <FaEdit />
                   </button>
-                </td>
-              </tr>
+                </Table.Cell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
 
         {/* Delete Confirmation Modal */}
         <Modal show={isModalOpen} onClose={closeDeleteModal} size="md">
@@ -93,7 +89,6 @@ const CandidateDashboard = () => {
             </Button>
           </Modal.Footer>
         </Modal>
-
       </div>
     </div>
   );

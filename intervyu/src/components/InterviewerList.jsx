@@ -27,9 +27,12 @@ function InterviewerList() {
   };
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Interviewers List</h2>
-      <Table className="w-full">
+    <div className="p-6 text-center overflow-x-auto">
+        <h1
+        class="text-4xl py-4 pb-8 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-sky-400 to-cyan-500">
+        All Interviewers
+    </h1>
+      <Table>
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Type</Table.HeadCell>

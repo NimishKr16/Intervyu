@@ -8,12 +8,13 @@ function Interviewers() {
   const [isAddModalOpen, setAddModalOpen] = useState(false);
 
   return (
-    <div>
+    <div >
+      
+      <InterviewerList />
+      <AddInterviewerModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
       <Button onClick={() => setAddModalOpen(true)} className="mb-4 ml-6">
         + Add Interviewer
       </Button>
-      <InterviewerList />
-      <AddInterviewerModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
     </div>
   );
 }
