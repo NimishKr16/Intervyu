@@ -12,7 +12,8 @@ function Interviewers() {
       
       <InterviewerList />
       <AddInterviewerModal isOpen={isAddModalOpen} onClose={() => setAddModalOpen(false)} />
-      <Button onClick={() => setAddModalOpen(true)} className="mb-4 ml-6">
+      <Button onClick={() => setAddModalOpen(true)} 
+      className='mx-auto'>
         + Add Interviewer
       </Button>
     </div>

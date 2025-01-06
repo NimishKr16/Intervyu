@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useCandidates } from "../context/CandidateContext";
 import { Modal, Button, Table } from "flowbite-react";
 import { FaTrash, FaEdit } from "react-icons/fa";
-
+import { toast } from "react-toastify";
 const CandidateDashboard = () => {
   const { candidates, deleteCandidate } = useCandidates();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,6 +21,15 @@ const CandidateDashboard = () => {
   const handleDelete = () => {
     deleteCandidate(candidateToDelete.id);
     closeDeleteModal();
+    toast.warn(`Candidate "${candidateToDelete.name}" has been deleted successfully.`, {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -34,7 +43,7 @@ const CandidateDashboard = () => {
           <span className="flex-grow block border-t border-black"></span>
         </h2>
 
-        {/* Flowbite Table */}
+        
         <Table hoverable>
           <Table.Head>
             <Table.HeadCell>Name</Table.HeadCell>

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, TextInput, Select } from 'flowbite-react';
 import { useInterviewers } from '../context/InterviewerContext';
+import { toast } from 'react-toastify';
 
 function AddInterviewerModal({ isOpen, onClose }) {
   const { addInterviewer } = useInterviewers();
@@ -10,12 +11,34 @@ function AddInterviewerModal({ isOpen, onClose }) {
   const [position, setPosition] = useState('');
 
   const handleAdd = () => {
-    if (!name || !type || !position) return alert('All fields are required!');
+    if (!name || !type || !position) {
+        toast.error('All fields are required!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        return;
+      }
+
     addInterviewer({ name, type, position });
     setName('');
     setType('');
     setPosition('');
     onClose();
+
+    toast.success(`Interviewer "${name}" added successfully!`, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
   };
 
   return (
