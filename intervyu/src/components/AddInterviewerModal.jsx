@@ -24,6 +24,7 @@ function AddInterviewerModal({ isOpen, onClose }) {
         return;
       }
 
+    // Add the interviewer with bookedSlots as an empty array
     addInterviewer({ name, type, position });
     setName('');
     setType('');

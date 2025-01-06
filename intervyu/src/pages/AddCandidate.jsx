@@ -13,7 +13,6 @@ function AddCandidate() {
   const [interviewer, setInterviewer] = useState("");
   const [email, setEmail] = useState("");
   const [round, setRound] = useState("");
-  const [showToast, setShowToast] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();

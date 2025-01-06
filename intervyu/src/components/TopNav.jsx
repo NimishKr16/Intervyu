@@ -22,7 +22,7 @@ export function TopNav() {
         <Navbar.Link className='cursor-pointer text-lg' onClick={() => navigate('/add-candidate')}>
         Add Candidate
         </Navbar.Link>
-        <Navbar.Link className='cursor-pointer text-lg' onClick={() => navigate('/candidates')}>All Candidates</Navbar.Link>
+        <Navbar.Link className='cursor-pointer text-lg' onClick={() => navigate('/candidates')}>Candidates</Navbar.Link>
         <Navbar.Link className='cursor-pointer text-lg' onClick={() => navigate('/interviewers')}>Interviewers</Navbar.Link>
         {/* <Navbar.Link href="#">Contact</Navbar.Link> */}
       </Navbar.Collapse>

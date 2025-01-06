@@ -13,7 +13,7 @@ import CandidateDashboard from "./pages/CandidateDashboard";
 import { CandidateProvider } from "./context/CandidateContext";
 import { InterviewerProvider } from './context/InterviewerContext';
 // Calendar
-import Calendar from "./components/Calendar.jsx";
+import Calendar from "./components/InterviewCalendar.jsx";
 // Interviewers
 import Interviewers from "./pages/Interviewers.jsx";
 
