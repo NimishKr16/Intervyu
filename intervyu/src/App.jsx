@@ -11,15 +11,20 @@ import AddCandidate from "./pages/AddCandidate";
 import CandidateDashboard from "./pages/CandidateDashboard";
 // Candidate List
 import { CandidateProvider } from "./context/CandidateContext";
+import { InterviewerProvider } from './context/InterviewerContext';
 // Calendar
 import Calendar from "./components/Calendar.jsx";
-
+// Interviewers
+import Interviewers from "./pages/Interviewers.jsx";
 
 function App() {
 
   return (
     <>
     <BrowserRouter>
+      <InterviewerProvider>
+
+      
       <CandidateProvider>
       <ToastContainer />
         <TopNav/>
@@ -27,8 +32,10 @@ function App() {
           <Route path="/add-candidate" element={<AddCandidate />} />
           <Route path="/candidates" element={<CandidateDashboard />} />
           <Route path="/" element={<Calendar />} />
+          <Route path="/interviewers" element={<Interviewers />} />
         </Routes>
       </CandidateProvider>
+      </InterviewerProvider>
       </BrowserRouter>
     </>
   );
