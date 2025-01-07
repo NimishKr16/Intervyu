@@ -114,66 +114,64 @@ const CandidateDashboard = () => {
     );
   };
 
-  
-const handleEditSave = () => {
-  if (
-    !editedName ||
-    !editedType ||
-    !selectedInterviewer ||
-    !selectedDateTime
-  ) {
-    toast.error("All fields must be filled!");
-    return;
-  }
-
-  // Format selectedDateTime into a readable string
-  const formattedDateTime = format(selectedDateTime, "yyyy-MM-dd HH:mm");
-
-  const selectedInterviewerObj = interviewers.find(
-    (i) => i.name === selectedInterviewer
-  );
-
-  if (selectedInterviewerObj) {
-    // Ensure bookedSlots is initialized as an array
-    if (!Array.isArray(selectedInterviewerObj.bookedSlots)) {
-      selectedInterviewerObj.bookedSlots = [];
-    }
-
-    // Extract the old slot if editing
-    const oldSlot = candidateToEdit?.dateTime || null;
-
-    // Remove old slot if it exists
-    if (oldSlot) {
-      selectedInterviewerObj.bookedSlots = selectedInterviewerObj.bookedSlots.filter(
-        (slot) => slot !== oldSlot
-      );
-    }
-
-    // Check if the new slot is already booked by someone else
-    const isAlreadyBooked = selectedInterviewerObj.bookedSlots.some(
-      (slot) => slot === formattedDateTime
-    );
-
-    if (isAlreadyBooked) {
-      toast.error("This slot is already booked. Please select another slot.");
+  const handleEditSave = () => {
+    if (
+      !editedName ||
+      !editedType ||
+      !selectedInterviewer ||
+      !selectedDateTime
+    ) {
+      toast.error("All fields must be filled!");
       return;
     }
 
-    // Add the new slot
-    selectedInterviewerObj.bookedSlots.push(formattedDateTime);
-  }
+    // Format selectedDateTime into a readable string
+    const formattedDateTime = format(selectedDateTime, "yyyy-MM-dd HH:mm");
 
-  // Save the updated data
-  updateCandidate(candidateToEdit.id, {
-    name: editedName,
-    interviewType: editedType,
-    interviewer: selectedInterviewer,
-    dateTime: formattedDateTime,
-  });
+    const selectedInterviewerObj = interviewers.find(
+      (i) => i.name === selectedInterviewer
+    );
 
-  closeEditModal();
-  toast.success(`Candidate "${editedName}" updated successfully.`);
-};
+    if (selectedInterviewerObj) {
+      // Ensure bookedSlots is initialized as an array
+      if (!Array.isArray(selectedInterviewerObj.bookedSlots)) {
+        selectedInterviewerObj.bookedSlots = [];
+      }
+
+      // Extract the old slot if editing
+      const oldSlot = candidateToEdit?.dateTime || null;
+
+      // Remove old slot if it exists
+      if (oldSlot) {
+        selectedInterviewerObj.bookedSlots =
+          selectedInterviewerObj.bookedSlots.filter((slot) => slot !== oldSlot);
+      }
+
+      // Check if the new slot is already booked by someone else
+      const isAlreadyBooked = selectedInterviewerObj.bookedSlots.some(
+        (slot) => slot === formattedDateTime
+      );
+
+      if (isAlreadyBooked) {
+        toast.error("This slot is already booked. Please select another slot.");
+        return;
+      }
+
+      // Add the new slot
+      selectedInterviewerObj.bookedSlots.push(formattedDateTime);
+    }
+
+    // Save the updated data
+    updateCandidate(candidateToEdit.id, {
+      name: editedName,
+      interviewType: editedType,
+      interviewer: selectedInterviewer,
+      dateTime: formattedDateTime,
+    });
+
+    closeEditModal();
+    toast.success(`Candidate "${editedName}" updated successfully.`);
+  };
   // ✅ Enable DateTime Picker only after selecting an interviewer
   const handleInterviewerSelect = (interviewerName) => {
     setSelectedInterviewer(interviewerName);
@@ -192,6 +190,30 @@ const handleEditSave = () => {
     }
 
     setSelectedDateTime(null); // Reset DateTime when interviewer changes
+  };
+
+  const handleDescheduleInterview = () => {
+    const isConfirmed = window.confirm("Are you sure you want to deschedule this interview?");
+
+    if (!isConfirmed) {
+      return; // If the user cancels, exit the function
+    }
+
+    // Logic to set the interview back to pending or remove the date and time
+    const updatedCandidate = {
+      ...candidateToEdit,
+      dateTime: "", // Reset dateTime to null or use 'pending' if you prefer
+      interviewer: "", // Assuming you have an 'interviewStatus' field to mark it as pending
+    };
+  
+    // Update the candidate with the descheduled status
+    updateCandidate(candidateToEdit.id, updatedCandidate);
+  
+    // Show a Toast notification
+    toast.success("The interview has been descheduled and set to pending.");
+  
+    // Close the modal after descheduling
+    closeEditModal();
   };
 
   return (
@@ -310,7 +332,9 @@ const handleEditSave = () => {
               timeIntervals={60} // Ensures hour-specific slots only
               placeholderText="Select date and time"
               className="border p-2 rounded w-full mb-4"
-              filterTime={(time) => isValidTimeSlot(time) && !isSlotBooked(time)} // Allow only specific time slots
+              filterTime={(time) =>
+                isValidTimeSlot(time) && !isSlotBooked(time)
+              } // Allow only specific time slots
               disabled={!isDateTimePickerEnabled}
             />
           </Modal.Body>
@@ -320,6 +344,14 @@ const handleEditSave = () => {
             </Button>
             <Button onClick={handleEditSave} color="success">
               Save
+            </Button>
+
+            {/* Deschedule Interview Button */}
+            <Button
+              onClick={handleDescheduleInterview} // Handle the descheduling logic
+              color="failure" // Red button
+            >
+              Deschedule Interview
             </Button>
           </Modal.Footer>
         </Modal>
