@@ -3,7 +3,7 @@ A functional React application that allows HR/Recruiters to schedule, manage, an
 
 # Live Demo
 
-## Check out the live demo of the project: [Intervyu](https://intervyu.vercel.app).
+## Check out the live demo of the project: [Intervyu](https://intervyu.vercel.app)
 
 ## Technologies Used
 
@@ -56,7 +56,7 @@ npm start
 - ✅ **Real-time Feedback**: Immediate feedback on invalid or conflicting slots.
 - ✅ **Custom Modal**: View detailed interview information upon event click.
 
-## [Watch Demo Video]([DemoVideo.mp4](https://drive.google.com/file/d/14tU_m_V9dcJi4Qlaj1YLuMaT5daLFLr7/view?usp=sharing))
+## [Watch Demo Video](https://drive.google.com/file/d/14tU_m_V9dcJi4Qlaj1YLuMaT5daLFLr7/view?usp=sharing)
 ## Mobile View -
 ![Mobile View](MobView.png)
 
