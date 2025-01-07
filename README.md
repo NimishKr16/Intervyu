@@ -53,6 +53,13 @@ npm start
 - ✅ **Real-time Feedback**: Immediate feedback on invalid or conflicting slots.
 - ✅ **Custom Modal**: View detailed interview information upon event click.
 
+<video width="320" height="240" controls>
+  <source src="DemoVideo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<img src="MobView.png" width="600" height="820" />
+
 ## 🖌️ Design Decisions
 
 -	**Component-Based Architecture**: The project follows a modular, component-based structure using React. This makes the app scalable and easy to maintain, where each feature (e.g., Candidate Modal, Interview Calendar, etc.) is a separate component with specific responsibilities.
