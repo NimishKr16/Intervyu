@@ -54,11 +54,11 @@ npm start
 - ✅ **Custom Modal**: View detailed interview information upon event click.
 
 <video width="320" height="240" controls>
-  <source src="DemoVideo.mp4" type="video/mp4">
+  <source src="DemoVideo.mov" type="video/quicktime">
   Your browser does not support the video tag.
 </video>
 
-<img src="MobView.png" width="600" height="820" />
+![Mobile View](MobView.png)
 
 ## 🖌️ Design Decisions
 
