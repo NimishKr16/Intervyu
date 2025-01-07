@@ -27,7 +27,7 @@ const CandidateDashboard = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [availableSlots, setAvailableSlots] = useState(SLOT_TIMINGS);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
-  const [isDateTimePickerEnabled, setIsDateTimePickerEnabled] = useState(false); // ✅ NEW STATE to toggle DateTimePicker
+  const [isDateTimePickerEnabled, setIsDateTimePickerEnabled] = useState(false); // STATE to toggle DateTimePicker
 
   // Open and Close Modals
   const openDeleteModal = (candidate) => {
