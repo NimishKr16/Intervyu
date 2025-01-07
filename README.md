@@ -1,6 +1,9 @@
 # Intervyu
 A functional React application that allows HR/Recruiters to schedule, manage, and view interviews efficiently.
 
+# Live Demo
+
+Check out the live demo of the project: [Intervyu](https://intervyu.vercel.app).
 
 ## Technologies Used
 
