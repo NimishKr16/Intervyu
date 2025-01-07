@@ -6,13 +6,12 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Modal } from "flowbite-react";
-import { useNavigate } from 'react-router-dom';
+
 
 const InterviewCalendar = () => {
   const { candidates } = useCandidates(); // Retrieving the list of candidates
   const { interviewers } = useInterviewers(); // Retrieving interviewers (if needed)
   const [selectedEvent, setSelectedEvent] = useState(null); // Managing state for selected event
-  const navigate = useNavigate(); // To navigate to other pages if needed
 
   // Creating events based on candidates data
   const events = candidates.map((candidate) => {
@@ -21,24 +20,36 @@ const InterviewCalendar = () => {
       return null; // Skip this candidate if dateTime is missing
     }
   
-    const [date, time] = candidate.dateTime.split(" "); // Split date and time from candidate's dateTime
-    const eventTime = time || "";  // Assign time if available, otherwise default to empty
+    try {
+      // Extract date and time from candidate.dateTime
+      const [date, time] = candidate.dateTime.split(" ");
+      if (!date || !time) {
+        console.error(`Invalid dateTime format for candidate: ${candidate.name}`);
+        return null; // Skip if date or time is missing
+      }
   
-    const startTime = new Date(`${date}`); // Converting date to Date object
+      const startTime = new Date(`${date}T${time}`);
+      const endTime = new Date(startTime);
+      endTime.setHours(endTime.getHours() + 1); // Assuming a 1-hour duration
   
-    return {
-      title: candidate.name,  // Candidate's name as event title
-      date: date,  // Using date for the calendar date
-      start: new Date(`${date}`),  // Setting the event start time
-      extendedProps: {
-        candidateName: candidate.name, // Candidate's name
-        interviewer: candidate.interviewer, // Interviewer's name
-        interviewType: candidate.interviewType, // Type of interview (e.g. Technical, HR)
-        slot: eventTime, // Interview time slot
-        round: candidate.interviewRound || "Not Specified", // Interview round, with a default value if not present
-      },
-    };
-  }).filter(event => event !== null); // Filter out null events (in case dateTime was missing)
+      return {
+        title: candidate.name, // Candidate's name as event title
+        start: startTime, // Event start time
+        end: endTime, // Event end time (1-hour duration)
+        extendedProps: {
+          candidateName: candidate.name,
+          interviewer: candidate.interviewer,
+          interviewType: candidate.interviewType,
+          slot: time,
+          date: date,
+          round: candidate.round || "Not Specified",
+        },
+      };
+    } catch (error) {
+      console.error(`Error processing candidate: ${candidate.name}`, error);
+      return null;
+    }
+  }).filter(event => event !== null); // Filter out invalid events 
 
   return (
     <div className="w-[80%] h-[80%] mx-auto">
