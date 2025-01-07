@@ -3,6 +3,7 @@ import { useCandidates } from "../context/CandidateContext"; // Fetching candida
 import { useInterviewers } from "../context/InterviewerContext";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Modal } from "flowbite-react";
 import { useNavigate } from 'react-router-dom';
@@ -41,12 +42,17 @@ const InterviewCalendar = () => {
 
   return (
     <div className="w-[80%] h-[80%] mx-auto">
-      <h2 className="text-center text-xl font-bold mb-4">Interview Calendar</h2>
+      <h2 className="text-center text-4xl font-bold mb-4 text-cyan-600 py-4">Interview Calendar</h2>
       <FullCalendar
         style={{ height: "80%", width: "80%", maxWidth: "900px", margin: "0 auto" }}
-        plugins={[dayGridPlugin, interactionPlugin]}
+        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         events={events}  // Pass the events data to FullCalendar
+        headerToolbar={{
+          left: "prev,next today",  // Navigation buttons (previous, next, today)
+          center: "title",  // Display the calendar's title (month, week, or day)
+          right: "dayGridMonth,timeGridWeek,timeGridDay",  // View options: month, week, day
+        }}
         eventContent={(eventInfo) => {
           // Render time inside the event block on the calendar
           return (

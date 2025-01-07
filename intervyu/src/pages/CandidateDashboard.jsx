@@ -4,10 +4,13 @@ import { useInterviewers } from "../context/InterviewerContext";
 import { Modal, Button, Table, Select, TextInput } from "flowbite-react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
 
 const CandidateDashboard = () => {
   // Predefined Slots
-  const SLOT_TIMINGS = ["10-11am", "12-1pm", "2-3pm", "4-5pm", "5-6pm"];
+  const SLOT_TIMINGS = ["10:00", "12:00", "14:00", "16:00", "17:00"];
 
   const { candidates, deleteCandidate, updateCandidate } = useCandidates();
   const { interviewers } = useInterviewers();
@@ -23,6 +26,8 @@ const CandidateDashboard = () => {
   const [selectedSlot, setSelectedSlot] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [availableSlots, setAvailableSlots] = useState(SLOT_TIMINGS);
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [isDateTimePickerEnabled, setIsDateTimePickerEnabled] = useState(false); // ✅ NEW STATE to toggle DateTimePicker
 
   // Open and Close Modals
   const openDeleteModal = (candidate) => {
@@ -44,6 +49,16 @@ const CandidateDashboard = () => {
         position: "top-right",
       }
     );
+  };
+
+  // Allow only specified time slots
+  const isValidTimeSlot = (time) => {
+    const selectedHours = time.getHours(); // Extract hours from Date object
+    const selectedMinutes = time.getMinutes(); // Extract minutes
+    const formattedTime = `${String(selectedHours).padStart(2, "0")}:${String(
+      selectedMinutes
+    ).padStart(2, "0")}`;
+    return SLOT_TIMINGS.includes(formattedTime);
   };
 
   const openEditModal = (candidate) => {
@@ -68,69 +83,115 @@ const CandidateDashboard = () => {
     setAvailableSlots(SLOT_TIMINGS);
   };
 
-  // Update Available Slots when Interviewer is Selected
-  const handleInterviewerSelect = (interviewerName) => {
-    setSelectedInterviewer(interviewerName);
-
-    // Find the selected interviewer
-    const interviewer = interviewers.find((i) => i.name === interviewerName);
-
-    // If interviewer is found, update available slots
-    if (interviewer) {
-      const bookedSlots = interviewer.bookedSlots || []; // Ensure bookedSlots is an empty array if not defined
-      const available = SLOT_TIMINGS.filter(
-        (slot) => !bookedSlots.includes(slot)
-      );
-      setAvailableSlots(available);
-    } else {
-      // If interviewer is not found, reset available slots to all slots
-      setAvailableSlots(SLOT_TIMINGS);
-    }
-  };
-
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
     setSelectedSlot(""); // Reset the selected slot when date is changed
   };
 
-  // New function to handle slot availability check for already selected candidates
-  const checkSlotAvailability = (selectedDate, selectedSlot) => {
-    // Check if the selected date and slot are already booked by any candidate
-    const isSlotBooked = candidates.some(
-      (candidate) =>
-        candidate.dateTime === `${selectedDate} ${selectedSlot}` &&
-        candidate.id !== candidateToEdit?.id // Prevent checking the current candidate being edited
+  // ✅ Check if selected date-time is already booked
+  const isSlotBooked = (dateTime) => {
+    if (!selectedInterviewer) return false;
+
+    const selectedInterviewerObj = interviewers.find(
+      (i) => i.name === selectedInterviewer
     );
-    return isSlotBooked;
+    if (
+      !selectedInterviewerObj ||
+      !Array.isArray(selectedInterviewerObj.bookedSlots)
+    ) {
+      return false;
+    }
+
+    const selectedTime = dateTime.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const selectedDate = dateTime.toLocaleDateString();
+
+    // Check if both date and time match
+    return selectedInterviewerObj.bookedSlots.some(
+      (slot) => slot.date === selectedDate && slot.time === selectedTime
+    );
   };
 
-  const handleEditSave = () => {
-    if (
-      !editedName ||
-      !editedType ||
-      !selectedInterviewer ||
-      !selectedSlot ||
-      !selectedDate
-    ) {
-      toast.error("All fields must be filled!");
+  
+const handleEditSave = () => {
+  if (
+    !editedName ||
+    !editedType ||
+    !selectedInterviewer ||
+    !selectedDateTime
+  ) {
+    toast.error("All fields must be filled!");
+    return;
+  }
+
+  // Format selectedDateTime into a readable string
+  const formattedDateTime = format(selectedDateTime, "yyyy-MM-dd HH:mm");
+
+  const selectedInterviewerObj = interviewers.find(
+    (i) => i.name === selectedInterviewer
+  );
+
+  if (selectedInterviewerObj) {
+    // Ensure bookedSlots is initialized as an array
+    if (!Array.isArray(selectedInterviewerObj.bookedSlots)) {
+      selectedInterviewerObj.bookedSlots = [];
+    }
+
+    // Extract the old slot if editing
+    const oldSlot = candidateToEdit?.dateTime || null;
+
+    // Remove old slot if it exists
+    if (oldSlot) {
+      selectedInterviewerObj.bookedSlots = selectedInterviewerObj.bookedSlots.filter(
+        (slot) => slot !== oldSlot
+      );
+    }
+
+    // Check if the new slot is already booked by someone else
+    const isAlreadyBooked = selectedInterviewerObj.bookedSlots.some(
+      (slot) => slot === formattedDateTime
+    );
+
+    if (isAlreadyBooked) {
+      toast.error("This slot is already booked. Please select another slot.");
       return;
     }
 
-    // Check if the slot is available for the selected date and time
-    if (checkSlotAvailability(selectedDate, selectedSlot)) {
-      toast.error("This date and time slot has already been booked!");
-      return;
+    // Add the new slot
+    selectedInterviewerObj.bookedSlots.push(formattedDateTime);
+  }
+
+  // Save the updated data
+  updateCandidate(candidateToEdit.id, {
+    name: editedName,
+    interviewType: editedType,
+    interviewer: selectedInterviewer,
+    dateTime: formattedDateTime,
+  });
+
+  closeEditModal();
+  toast.success(`Candidate "${editedName}" updated successfully.`);
+};
+  // ✅ Enable DateTime Picker only after selecting an interviewer
+  const handleInterviewerSelect = (interviewerName) => {
+    setSelectedInterviewer(interviewerName);
+    setIsDateTimePickerEnabled(!!interviewerName); // Enable DateTimePicker if interviewer is selected
+
+    // Update available slots based on interviewer
+    const interviewer = interviewers.find((i) => i.name === interviewerName);
+    if (interviewer) {
+      const bookedSlots = interviewer.bookedSlots || [];
+      const available = SLOT_TIMINGS.filter(
+        (slot) => !bookedSlots.includes(slot)
+      );
+      setAvailableSlots(available);
+    } else {
+      setAvailableSlots(SLOT_TIMINGS);
     }
 
-    updateCandidate(candidateToEdit.id, {
-      name: editedName,
-      interviewType: editedType,
-      interviewer: selectedInterviewer,
-      dateTime: `${selectedDate} ${selectedSlot}`,
-    });
-
-    closeEditModal();
-    toast.success(`Candidate "${editedName}" updated successfully.`);
+    setSelectedDateTime(null); // Reset DateTime when interviewer changes
   };
 
   return (
@@ -218,6 +279,7 @@ const CandidateDashboard = () => {
             />
             <TextInput
               value={editedType}
+              className="py-2"
               onChange={(e) => setEditedType(e.target.value)}
               placeholder="Type of Interview"
             />
@@ -235,42 +297,22 @@ const CandidateDashboard = () => {
               ))}
             </Select>
 
-            {/* Date Selection */}
-            <input
-              type="date"
-              value={selectedDate}
-              onChange={handleDateChange}
-              min={new Date().toISOString().split("T")[0]}
-              disabled={!selectedInterviewer} // Disable until interviewer is selected
+            {/* Date and Time Picker */}
+            <label className="block mb-2 font-medium pt-2">
+              Select Date & Time:
+            </label>
+            <DatePicker
+              selected={selectedDateTime}
+              onChange={(date) => setSelectedDateTime(date)}
+              showTimeSelect
+              dateFormat="Pp"
+              minDate={new Date()} // Disable past dates
+              timeIntervals={60} // Ensures hour-specific slots only
+              placeholderText="Select date and time"
+              className="border p-2 rounded w-full mb-4"
+              filterTime={(time) => isValidTimeSlot(time) && !isSlotBooked(time)} // Allow only specific time slots
+              disabled={!isDateTimePickerEnabled}
             />
-
-            {/* Slot Selection */}
-            <Select
-              value={selectedSlot}
-              onChange={(e) => setSelectedSlot(e.target.value)}
-              disabled={!selectedInterviewer || !selectedDate}
-            >
-              <option value="">Select Time Slot</option>
-              {availableSlots.map((slot) => {
-                // Find the interviewer object based on selectedInterviewer name
-                const selectedInterviewerObj = interviewers.find(
-                  (i) => i.name === selectedInterviewer
-                );
-
-                // Check if selectedInterviewerObj exists and if bookedSlots is an array
-                const isSlotBooked =
-                  selectedInterviewerObj &&
-                  Array.isArray(selectedInterviewerObj.bookedSlots)
-                    ? selectedInterviewerObj.bookedSlots.includes(slot)
-                    : false;
-
-                return (
-                  <option key={slot} value={slot} disabled={isSlotBooked}>
-                    {slot}
-                  </option>
-                );
-              })}
-            </Select>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={closeEditModal} color="gray">
