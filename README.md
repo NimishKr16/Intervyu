@@ -53,11 +53,8 @@ npm start
 - ✅ **Real-time Feedback**: Immediate feedback on invalid or conflicting slots.
 - ✅ **Custom Modal**: View detailed interview information upon event click.
 
-<video width="320" height="240" controls>
-  <source src="DemoVideo.mov" type="video/quicktime">
-  Your browser does not support the video tag.
-</video>
-
+## [Watch Demo Video](DemoVideo.mp4)
+## Mobile View -
 ![Mobile View](MobView.png)
 
 ## 🖌️ Design Decisions
