@@ -3,7 +3,7 @@ A functional React application that allows HR/Recruiters to schedule, manage, an
 
 # Live Demo
 
-Check out the live demo of the project: [Intervyu](https://intervyu.vercel.app).
+## Check out the live demo of the project: [Intervyu](https://intervyu.vercel.app).
 
 ## Technologies Used
 
