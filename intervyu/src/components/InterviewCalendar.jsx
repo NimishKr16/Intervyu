@@ -52,12 +52,13 @@ const InterviewCalendar = () => {
   }).filter(event => event !== null); // Filter out invalid events 
 
   return (
-    <div className="w-[80%] h-[80%] mx-auto">
+    <div className="mx-auto px-4">
       <h2 className="text-center text-4xl font-bold mb-4 text-cyan-600 py-4">Interview Calendar</h2>
       <FullCalendar
-        style={{ height: "80%", width: "80%", maxWidth: "900px", margin: "0 auto" }}
+        height={650}
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
+        handleWindowResize={true}
         events={events}  // Pass the events data to FullCalendar
         headerToolbar={{
           left: "prev,next today",  // Navigation buttons (previous, next, today)
