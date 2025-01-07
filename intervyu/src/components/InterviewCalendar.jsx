@@ -52,7 +52,7 @@ const InterviewCalendar = () => {
   }).filter(event => event !== null); // Filter out invalid events 
 
   return (
-    <div className="mx-auto px-4">
+    <div className="mx-auto px-4 h-[95%]">
       <h2 className="text-center text-4xl font-bold mb-4 text-cyan-600 py-4">Interview Calendar</h2>
       <FullCalendar
         height={650}
